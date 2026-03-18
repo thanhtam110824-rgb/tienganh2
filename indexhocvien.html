@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KidsEnglish – Giao diện Học Sinh</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#4F8CFF;--blight:#6BCBFF;--yellow:#FFD93D;--red:#FF6B6B;--green:#6BCB77;--purple:#9B72CF;--orange:#FF9A3C;--bg:#F0F4FF;--white:#fff;--text:#2D3436;--muted:#8899AA;--r:20px;--rs:14px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito',sans-serif;background:var(--bg);display:flex;min-height:100vh}
+.sidebar{width:220px;min-height:100vh;background:var(--white);border-right:2px solid #E8EFFF;display:flex;flex-direction:column;position:fixed;left:0;top:34px;bottom:0;z-index:50;box-shadow:4px 0 20px rgba(79,140,255,.07)}
+.s-logo{padding:20px 20px 16px;font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;color:var(--blue);border-bottom:2px solid #EEF4FF}
+.s-user{padding:14px 18px;display:flex;align-items:center;gap:11px;background:linear-gradient(135deg,rgba(79,140,255,.07),rgba(107,203,255,.04));border-bottom:2px solid #EEF4FF;margin-bottom:6px}
+.av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blight));display:flex;align-items:center;justify-content:center;font-size:1.2rem;border:2.5px solid rgba(79,140,255,.3);flex-shrink:0}
+.un{font-weight:800;font-size:.86rem}.ul{font-size:.7rem;color:var(--blue);font-weight:700;background:rgba(79,140,255,.1);padding:1px 7px;border-radius:20px;display:inline-block;margin-top:2px}
+.ns{padding:5px 12px 2px;font-size:.68rem;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 18px;color:var(--muted);font-weight:700;font-size:.86rem;cursor:pointer;transition:all .2s;position:relative}
+.ni:hover{color:var(--blue);background:rgba(79,140,255,.06)}
+.ni.active{color:var(--blue);background:linear-gradient(90deg,rgba(79,140,255,.11),transparent);font-weight:800}
+.ni.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue);border-radius:0 3px 3px 0}
+.ni-ic{font-size:1.1rem;width:20px;text-align:center}
+.nb{margin-left:auto;background:var(--red);color:white;font-size:.62rem;font-weight:800;padding:1px 6px;border-radius:20px}
+.s-bot{margin-top:auto;padding:14px;border-top:2px solid #EEF4FF}
+.sk-c{background:linear-gradient(135deg,#FF9A3C,#FFD93D);border-radius:var(--rs);padding:10px;text-align:center}
+.sk-n{font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:800;color:white}
+.sk-l{font-size:.72rem;font-weight:800;color:rgba(255,255,255,.85)}
+.main{margin-left:220px;flex:1;display:flex;flex-direction:column}
+.topbar{background:var(--white);border-bottom:2px solid #EEF4FF;padding:0 28px;height:62px;display:flex;align-items:center;gap:14px;position:sticky;top:34px;z-index:40;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.tb-title{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:var(--text);flex:1}
+.srch{display:flex;align-items:center;gap:7px;background:var(--bg);border:2px solid #E8EFFF;border-radius:50px;padding:6px 14px;width:200px}
+.srch input{border:none;background:transparent;font-family:'Nunito',sans-serif;font-size:.83rem;font-weight:600;color:var(--text);outline:none;width:100%}
+.xp-p{display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,rgba(255,217,61,.15),rgba(255,154,60,.1));border:2px solid rgba(255,217,61,.4);border-radius:50px;padding:5px 13px}
+.xp-p span{font-weight:800;font-size:.83rem;color:#B07D00}
+.nb-btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:2px solid #E8EFFF;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.nb-btn .dot{position:absolute;top:3px;right:3px;width:7px;height:7px;background:var(--red);border-radius:50%;border:2px solid white}
+.page{padding:26px 28px;display:none}
+.page.active{display:block;animation:up .25s ease}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sec-hdr h3{font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;color:var(--text)}
+.see-all{font-size:.8rem;font-weight:800;color:var(--blue);cursor:pointer;background:rgba(79,140,255,.08);padding:4px 11px;border-radius:50px}
+.card{background:var(--white);border-radius:var(--r);padding:18px;border:2px solid #E8EFFF}
+.greet{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;gap:14px;flex-wrap:wrap}
+.greet h2{font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:800}
+.greet p{color:var(--muted);font-weight:600;font-size:.9rem;margin-top:2px}
+.dgoal{background:linear-gradient(135deg,var(--blue),var(--blight));border-radius:var(--r);padding:14px 18px;color:white;min-width:190px}
+.dg-lb{font-size:.72rem;font-weight:800;opacity:.85;text-transform:uppercase;letter-spacing:.5px}
+.dg-bar{background:rgba(255,255,255,.25);border-radius:10px;height:7px;margin:7px 0;overflow:hidden}
+.dg-fill{background:white;height:100%;border-radius:10px}
+.dg-tx{font-size:.78rem;font-weight:800;opacity:.9}
+.stat-g{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.sc{background:var(--white);border-radius:var(--r);padding:16px 18px;border:2px solid #E8EFFF;transition:all .2s;cursor:pointer}
+.sc:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(79,140,255,.1);border-color:var(--blue)}
+.sc-ic{font-size:1.5rem;margin-bottom:6px}
+.sc-v{font-family:'Baloo 2',cursive;font-size:1.7rem;font-weight:800}
+.sc-l{font-size:.72rem;color:var(--muted);font-weight:700;margin-top:1px}
+.sc-ch{font-size:.7rem;font-weight:800;margin-top:3px}
+.pos{color:var(--green)}
+.lc-g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+.lc{background:var(--white);border-radius:var(--r);overflow:hidden;border:2px solid #E8EFFF;cursor:pointer;transition:all .22s}
+.lc:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.09);border-color:var(--blue)}
+.lc-th{height:88px;display:flex;align-items:center;justify-content:center;font-size:2.6rem;position:relative}
+.lc-bk{position:absolute;top:7px;right:7px;font-size:.62rem;font-weight:800;padding:2px 7px;border-radius:20px}
+.lc-bd{padding:12px}
+.lc-ti{font-weight:800;font-size:.88rem;color:var(--text);margin-bottom:3px}
+.lc-me{font-size:.72rem;color:var(--muted);font-weight:600;margin-bottom:8px}
+.lc-pb{background:#EEF4FF;border-radius:6px;height:5px;overflow:hidden;margin-bottom:4px}
+.lc-pf{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--blue),var(--blight))}
+.lc-pt{font-size:.7rem;font-weight:700;color:var(--blue)}
+.two-c{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;margin-bottom:22px}
+.act-i{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1.5px dashed #EEF4FF}
+.act-i:last-child{border:none;padding-bottom:0}
+.act-ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.act-in{flex:1}
+.act-t{font-weight:800;font-size:.84rem;color:var(--text)}
+.act-tm{font-size:.7rem;color:var(--muted);font-weight:600;margin-top:1px}
+.act-sc{font-weight:800;font-size:.84rem}
+.ach-g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ach-i{background:var(--bg);border-radius:10px;padding:10px;text-align:center;border:2px solid #E8EFFF}
+.ach-i.on{background:linear-gradient(135deg,rgba(255,217,61,.12),rgba(255,154,60,.08));border-color:rgba(255,217,61,.4)}
+.ach-i:not(.on){opacity:.4;filter:grayscale(1)}
+.ach-em{font-size:1.6rem;margin-bottom:3px}
+.ach-nm{font-size:.68rem;font-weight:800;color:var(--text)}
+.lb-i{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1.5px dashed #EEF4FF}
+.lb-i:last-child{border:none}
+.lb-r{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;width:26px;text-align:center}
+.lb-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.lb-nm{flex:1;font-weight:800;font-size:.84rem}
+.lb-pt{font-weight:800;font-size:.84rem;color:var(--blue)}
+.lb-i.me{background:rgba(79,140,255,.06);border-radius:10px;padding:9px 8px;margin:0 -8px;border:none}
+/* QUIZ */
+.quiz-wrap{max-width:560px;margin:0 auto}
+.q-topbar{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.q-close{width:34px;height:34px;border-radius:50%;background:var(--bg);border:2px solid #E8EFFF;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:all .2s}
+.q-close:hover{border-color:var(--red);color:var(--red)}
+.q-prog{flex:1;background:#E8EFFF;border-radius:10px;height:10px;overflow:hidden}
+.q-pf{height:100%;background:linear-gradient(90deg,var(--green),#52C788);border-radius:10px;transition:width .4s}
+.q-xp{font-size:.78rem;font-weight:800;color:var(--blue)}
+.q-hts{display:flex;gap:2px;font-size:1rem}
+.q-type-bar{display:flex;gap:8px;margin-bottom:18px}
+.qtb{flex:1;padding:10px 6px;border-radius:var(--rs);text-align:center;cursor:pointer;border:2.5px solid #E8EFFF;background:var(--white);font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;color:var(--muted);transition:all .2s}
+.qtb:hover{border-color:var(--blue);color:var(--blue)}
+.qtb.active{background:var(--blue);color:white;border-color:var(--blue);box-shadow:0 4px 12px rgba(79,140,255,.3)}
+.qcard{background:var(--white);border-radius:var(--r);padding:24px;border:2px solid #E8EFFF;box-shadow:0 4px 16px rgba(0,0,0,.05);margin-bottom:14px}
+.q-badge{display:inline-block;background:rgba(79,140,255,.1);color:var(--blue);font-size:.68rem;font-weight:800;padding:2px 9px;border-radius:20px;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
+/* IMAGE REVEAL — hidden by default */
+.qimg-wrap{position:relative;background:linear-gradient(135deg,#EEF4FF,#DBE8FF);border-radius:var(--rs);margin-bottom:14px;overflow:hidden;cursor:pointer;user-select:none}
+.qimg-em{font-size:5rem;text-align:center;padding:18px 0;line-height:1;display:block;transition:filter .35s,transform .3s}
+.qimg-wrap.hidden .qimg-em{filter:blur(20px) brightness(.55);transform:scale(.93)}
+.qimg-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;background:rgba(20,40,90,.38);backdrop-filter:blur(2px);border-radius:var(--rs);transition:opacity .3s}
+.qimg-overlay .hint-label{color:white;font-weight:800;font-size:.82rem;background:rgba(255,255,255,.18);padding:6px 16px;border-radius:50px;border:1.5px solid rgba(255,255,255,.35)}
+.qimg-overlay .hint-cost{color:rgba(255,220,100,.9);font-size:.72rem;font-weight:800}
+.qimg-wrap.revealed .qimg-overlay{opacity:0;pointer-events:none}
+.qimg-wrap.revealed .qimg-em{filter:none;transform:scale(1)}
+.hint-note{font-size:.7rem;color:var(--orange);font-weight:800;text-align:center;margin-bottom:10px;display:none}
+.q-txt{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:var(--text);text-align:center;margin-bottom:16px}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qopt{background:var(--bg);border:2.5px solid #E8EFFF;border-radius:var(--rs);padding:12px 14px;font-weight:800;font-size:.88rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:9px}
+.qopt:hover:not(.locked){border-color:var(--blue);background:rgba(79,140,255,.06);transform:translateY(-1px)}
+.qopt.locked{pointer-events:none}
+.qopt.correct{border-color:var(--green);background:rgba(107,203,119,.12);color:#2a7d3a}
+.qopt.wrong{border-color:var(--red);background:rgba(255,107,107,.1);color:#c0392b}
+.q-let{width:26px;height:26px;border-radius:7px;background:#E8EFFF;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:900;flex-shrink:0}
+.qopt.correct .q-let{background:var(--green);color:white}
+.qopt.wrong .q-let{background:var(--red);color:white}
+.fb-bar{border-radius:var(--rs);padding:13px 15px;display:flex;align-items:center;gap:10px;margin-bottom:12px;font-weight:800;font-size:.88rem}
+.fb-ok{background:rgba(107,203,119,.15);border:2px solid var(--green);color:#2a7d3a}
+.fb-no{background:rgba(255,107,107,.1);border:2px solid var(--red);color:#c0392b}
+.btn-cont{width:100%;background:linear-gradient(135deg,var(--blue),var(--blight));color:white;border:none;padding:13px;border-radius:50px;font-family:'Nunito',sans-serif;font-size:.92rem;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(79,140,255,.3)}
+.btn-cont:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(79,140,255,.4)}
+.result{text-align:center;padding:32px 16px;display:none}
+.r-em{font-size:4rem;margin-bottom:10px;animation:boun .5s ease}
+@keyframes boun{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+.r-ti{font-family:'Baloo 2',cursive;font-size:1.7rem;font-weight:800;margin-bottom:5px}
+.r-sub{color:var(--muted);font-weight:600;margin-bottom:22px}
+.r-stats{display:flex;justify-content:center;gap:22px;margin-bottom:24px}
+.rs-it{text-align:center}
+.rs-v{font-family:'Baloo 2',cursive;font-size:1.7rem;font-weight:800}
+.rs-l{font-size:.74rem;color:var(--muted);font-weight:700}
+/* SPEAKING */
+.spk-hero{background:linear-gradient(135deg,var(--purple),#B48EFF);border-radius:var(--r);padding:22px 26px;color:white;margin-bottom:20px;display:flex;align-items:center;gap:18px}
+.spk-hero-ic{font-size:2.6rem;background:rgba(255,255,255,.15);width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.spk-hero h2{font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800}
+.spk-hero p{font-size:.84rem;opacity:.85;font-weight:600;margin-top:3px}
+.spk-topics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.spk-topic{background:var(--white);border-radius:var(--r);padding:16px;border:2px solid #E8EFFF;cursor:pointer;transition:all .22s;text-align:center}
+.spk-topic:hover{transform:translateY(-2px);box-shadow:0 5px 16px rgba(155,114,207,.14);border-color:var(--purple)}
+.spk-topic.active{border-color:var(--purple);background:rgba(155,114,207,.06)}
+.st-ic{font-size:2rem;margin-bottom:6px}
+.st-nm{font-weight:800;font-size:.84rem;color:var(--text)}
+.st-ct{font-size:.7rem;color:var(--muted);font-weight:600;margin-top:1px}
+.st-bar{margin-top:7px;background:#EEF4FF;border-radius:5px;height:4px;overflow:hidden}
+.st-bf{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--purple),#B48EFF)}
+.spk-practice{background:var(--white);border-radius:var(--r);border:2px solid #E8EFFF;overflow:hidden;margin-bottom:18px}
+.spk-pr-hdr{background:linear-gradient(135deg,rgba(155,114,207,.08),rgba(180,142,255,.04));padding:14px 18px;border-bottom:2px solid #EEF4FF;display:flex;align-items:center;justify-content:space-between}
+.spk-pr-hdr h3{font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:800}
+.spk-pr-body{padding:20px}
+.word-list{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;justify-content:center}
+.wl-chip{padding:6px 14px;border-radius:50px;background:var(--bg);border:2.5px solid #E8EFFF;font-weight:800;font-size:.8rem;cursor:pointer;transition:all .2s;color:var(--text)}
+.wl-chip:hover{border-color:var(--purple);color:var(--purple)}
+.wl-chip.active{background:var(--purple);color:white;border-color:var(--purple)}
+.wl-chip.done{background:rgba(107,203,119,.12);border-color:var(--green);color:#2a7d3a}
+.word-display{text-align:center;margin-bottom:18px}
+.wd-img{font-size:4rem;margin-bottom:6px}
+.wd-word{font-family:'Baloo 2',cursive;font-size:2.4rem;font-weight:800;color:var(--text);margin-bottom:3px}
+.wd-ph{font-size:.9rem;color:var(--purple);font-weight:700;margin-bottom:4px}
+.wd-mean{font-size:.84rem;color:var(--muted);font-weight:600}
+.play-word{display:flex;align-items:center;justify-content:center;gap:7px;background:rgba(155,114,207,.1);border:2.5px solid rgba(155,114,207,.3);border-radius:50px;padding:8px 18px;cursor:pointer;transition:all .2s;font-weight:800;font-size:.84rem;color:var(--purple);margin:0 auto 18px;width:fit-content}
+.play-word:hover{background:rgba(155,114,207,.18);transform:scale(1.04)}
+.play-word.playing{background:var(--purple);color:white;border-color:var(--purple)}
+.mic-area{text-align:center;margin-bottom:18px}
+.mic-ring{position:relative;width:84px;height:84px;margin:0 auto 12px}
+.mic-ring-out{position:absolute;inset:-7px;border-radius:50%;border:3px solid rgba(155,114,207,.35);animation:rpulse 1.5s ease-in-out infinite;opacity:0}
+.mic-btn{width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,var(--purple),#B48EFF);border:none;cursor:pointer;font-size:1.9rem;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;transition:all .2s;box-shadow:0 5px 18px rgba(155,114,207,.4)}
+.mic-btn:hover{transform:scale(1.07)}
+.mic-btn.rec{background:linear-gradient(135deg,var(--red),#FF8E8E);box-shadow:0 5px 18px rgba(255,107,107,.5);animation:mpulse 1s ease-in-out infinite}
+.mic-btn.rec ~ .mic-ring-out{opacity:1}
+@keyframes rpulse{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.2);opacity:0}}
+@keyframes mpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.mic-lbl{font-weight:800;font-size:.84rem;color:var(--muted)}
+.mic-lbl.on{color:var(--red);animation:blink 1s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.waveform{display:flex;align-items:center;justify-content:center;gap:3px;height:38px;margin:10px 0}
+.wv-b{width:4px;border-radius:3px;background:var(--purple);height:4px;transition:height .09s}
+.spk-score-box{display:none;text-align:center;padding:14px;background:rgba(155,114,207,.07);border-radius:var(--rs);border:2px solid rgba(155,114,207,.2);margin-top:14px}
+.spk-sc-val{font-family:'Baloo 2',cursive;font-size:2.8rem;font-weight:800;color:var(--purple)}
+.spk-sc-lbl{font-size:.78rem;color:var(--muted);font-weight:700}
+.spk-sc-msg{margin-top:8px;font-size:.84rem;font-weight:700;color:var(--text)}
+.score-bars{display:flex;gap:14px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.sb-it{text-align:center;min-width:64px}
+.sb-circle{width:48px;height:48px;border-radius:50%;border:3px solid;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:800;margin:0 auto 4px}
+.sb-lbl{font-size:.66rem;color:var(--muted);font-weight:700}
+.spk-bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.shi{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1.5px dashed #EEF4FF}
+.shi:last-child{border:none}
+.shi-w{font-weight:800;font-size:.84rem;flex:1}
+.shi-s{font-size:.8rem;font-weight:800}
+.shi-bar{width:56px;height:5px;background:#EEF4FF;border-radius:5px;overflow:hidden;margin-top:2px}
+.shi-bf{height:100%;border-radius:5px}
+/* SCHEDULE */
+.day-row{display:flex;gap:7px;margin-bottom:16px;overflow-x:auto;padding-bottom:3px}
+.day-btn{min-width:50px;padding:8px 6px;border-radius:var(--rs);text-align:center;cursor:pointer;border:2px solid #E8EFFF;background:var(--white);transition:all .2s;flex-shrink:0}
+.day-btn.today{border-color:var(--blue);background:var(--blue);color:white}
+.day-btn.has{border-color:rgba(79,140,255,.3)}
+.day-d{font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800}
+.day-n{font-size:.6rem;font-weight:800;opacity:.7}
+.sch-list{display:flex;flex-direction:column;gap:10px}
+.sch-i{background:var(--white);border-radius:var(--r);padding:15px 17px;border:2px solid #E8EFFF;display:flex;align-items:center;gap:13px;cursor:pointer;transition:all .2s}
+.sch-i:hover{border-color:var(--blue);box-shadow:0 4px 14px rgba(79,140,255,.1)}
+.sch-tc{min-width:60px;text-align:center}
+.sch-hr{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:var(--blue)}
+.sch-pe{font-size:.66rem;color:var(--muted);font-weight:700}
+.sch-dv{width:2px;height:36px;background:#EEF4FF;border-radius:2px}
+.sch-in{flex:1}
+.sch-nm{font-weight:800;font-size:.88rem;color:var(--text)}
+.sch-te{font-size:.72rem;color:var(--muted);font-weight:600;margin-top:1px}
+.sch-st{font-size:.66rem;font-weight:800;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.slive{background:rgba(255,107,107,.12);color:var(--red);animation:pulse 2s infinite}
+.ssoon{background:rgba(255,217,61,.15);color:#B07D00}
+.sdone{background:rgba(107,203,119,.12);color:#2a7d3a}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+.join-btn{background:linear-gradient(135deg,var(--red),#FF8E8E);color:white;border:none;padding:6px 13px;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.74rem;cursor:pointer;transition:all .2s}
+.join-btn:hover{transform:scale(1.05)}
+/* PROFILE */
+.prof-hero{background:linear-gradient(135deg,var(--blue),var(--blight));border-radius:var(--r);padding:22px;margin-bottom:16px;display:flex;align-items:center;gap:16px;color:white}
+.prof-av{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;font-size:1.9rem;border:3px solid rgba(255,255,255,.4);flex-shrink:0}
+.prof-nm{font-family:'Baloo 2',cursive;font-size:1.35rem;font-weight:800}
+.prof-gr{font-size:.8rem;opacity:.82;font-weight:600;margin:2px 0}
+.xp-row{display:flex;align-items:center;gap:7px;margin-top:5px}
+.xpb{flex:1;max-width:180px;background:rgba(255,255,255,.22);border-radius:10px;height:7px;overflow:hidden}
+.xpbf{height:100%;background:rgba(255,255,255,.88);border-radius:10px;width:68%}
+.xp-tx{font-size:.72rem;font-weight:800;opacity:.88}
+.prof-sg{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:16px}
+.psc{background:var(--white);border-radius:var(--r);padding:15px;text-align:center;border:2px solid #E8EFFF}
+.psv{font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:800;color:var(--blue)}
+.psl{font-size:.7rem;color:var(--muted);font-weight:700;margin-top:2px}
+.ach-all{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.aa-i{background:var(--white);border-radius:10px;padding:10px 6px;text-align:center;border:2px solid #E8EFFF}
+.aa-i.on{border-color:rgba(255,217,61,.5);background:linear-gradient(135deg,rgba(255,217,61,.08),rgba(255,154,60,.04))}
+.aa-i:not(.on){opacity:.3;filter:grayscale(1)}
+/* LESSONS */
+.topic-g{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+.topic-c{background:var(--white);border-radius:var(--r);padding:16px;text-align:center;border:2px solid #E8EFFF;cursor:pointer;transition:all .22s}
+.topic-c:hover{transform:translateY(-2px);box-shadow:0 5px 16px rgba(0,0,0,.08)}
+.tpic-em{font-size:2rem;margin-bottom:7px}
+.tpic-nm{font-weight:800;font-size:.84rem;color:var(--text);margin-bottom:2px}
+.tpic-ct{font-size:.7rem;color:var(--muted);font-weight:600}
+.tpic-pb{margin-top:8px;background:#EEF4FF;border-radius:5px;height:4px;overflow:hidden}
+.tpic-pf{height:100%;border-radius:5px}
+.filter-row{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap}
+.fbtn{padding:6px 15px;border-radius:50px;border:2px solid #E8EFFF;background:var(--white);color:var(--muted);font-family:'Nunito',sans-serif;font-weight:800;font-size:.78rem;cursor:pointer;transition:all .2s}
+.fbtn.active{background:var(--blue);color:white;border-color:var(--blue)}
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.main{margin-left:0}.stat-g,.lc-g,.spk-topics{grid-template-columns:repeat(2,1fr)}.two-c,.spk-bottom{grid-template-columns:1fr}.topic-g{grid-template-columns:repeat(2,1fr)}.q-type-bar{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+
+<div id="sysbar" style="background:#0d1117;color:white;padding:6px 20px;display:flex;align-items:center;gap:10px;font-size:.77rem;font-weight:700;position:fixed;top:0;left:0;right:0;z-index:9999;box-shadow:0 2px 10px rgba(0,0,0,.4)">
+  <span style="font-family:'Baloo 2',cursive;font-size:.88rem;font-weight:800;color:#6BCBFF;white-space:nowrap">⭐ KidsEnglish</span>
+  <span style="opacity:.3;padding:0 2px">|</span>
+  <span style="background:rgba(79,140,255,.3);padding:2px 11px;border-radius:20px;font-size:.7rem;white-space:nowrap">👦 Học viên – Minh Khôi</span>
+  <span style="flex:1"></span>
+  <a href="../Giáo viên/index.html" style="color:rgba(255,255,255,.6);text-decoration:none;padding:3px 11px;border-radius:20px;border:1px solid rgba(255,255,255,.1);transition:all .2s" onmouseover="this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.background='transparent'">👩‍🏫 Giáo viên</a><a href="../Admin/adminindex.html" style="color:rgba(255,255,255,.6);text-decoration:none;padding:3px 11px;border-radius:20px;border:1px solid rgba(255,255,255,.1);transition:all .2s" onmouseover="this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.background='transparent'">👑 Admin</a>
+  <a href="../dangnhap.html" style="background:rgba(255,107,107,.18);color:#FF8E8E;text-decoration:none;padding:4px 14px;border-radius:20px;border:1px solid rgba(255,107,107,.35);font-weight:800;transition:all .2s;white-space:nowrap" onmouseover="this.style.background='rgba(255,107,107,.35)'" onmouseout="this.style.background='rgba(255,107,107,.18)'">🚪 Đăng xuất</a>
+</div>
+<div style="height:34px"></div>
+<aside class="sidebar">
+  <div class="s-logo">⭐ KidsEnglish</div>
+  <div class="s-user"><div class="av">🐼</div><div><div class="un">Minh Khôi</div><div class="ul">Lớp 2A · Level 8</div></div></div>
+  <div class="ns">Học tập</div>
+  <div class="ni active" onclick="go('dashboard',this)"><span class="ni-ic">🏠</span>Trang chủ</div>
+  <div class="ni" onclick="go('lessons',this)"><span class="ni-ic">📚</span>Bài học</div>
+  <div class="ni" onclick="go('quiz',this)"><span class="ni-ic">🎮</span>Luyện tập</div>
+  <div class="ni" onclick="go('speaking',this)"><span class="ni-ic">🎤</span>Luyện nói<span class="nb">Mới</span></div>
+  <div class="ni" onclick="go('schedule',this)"><span class="ni-ic">📅</span>Lịch học<span class="nb">1</span></div>
+  <div class="ns">Cá nhân</div>
+  <div class="ni" onclick="go('profile',this)"><span class="ni-ic">🏆</span>Thành tích</div>
+  <div class="ni"><span class="ni-ic">⚙️</span>Cài đặt</div>
+  <div class="s-bot"><div class="sk-c"><div class="sk-n">🔥 7</div><div class="sk-l">Ngày liên tiếp!</div></div></div>
+</aside>
+<div class="main">
+  <div class="topbar">
+    <div class="tb-title" id="ptitle">Trang chủ</div>
+    <div class="srch"><span>🔍</span><input type="text" placeholder="Tìm bài học..."></div>
+    <div class="xp-p"><span>⭐</span><span>2,450 XP</span></div>
+    <div class="nb-btn">🔔<div class="dot"></div></div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div class="greet">
+      <div><h2>Xin chào, Minh Khôi! 👋</h2><p>Hôm nay bạn sẽ học gì? Tiếp tục hành trình nào! 🚀</p></div>
+      <div class="dgoal"><div class="dg-lb">🎯 Mục tiêu hôm nay</div><div class="dg-bar"><div class="dg-fill" style="width:60%"></div></div><div class="dg-tx">3/5 bài · 60% hoàn thành</div></div>
+    </div>
+    <div class="stat-g">
+      <div class="sc"><div class="sc-ic">⭐</div><div class="sc-v" style="color:var(--yellow)">2,450</div><div class="sc-l">Tổng XP</div><div class="sc-ch pos">↑ +120 hôm nay</div></div>
+      <div class="sc"><div class="sc-ic">📚</div><div class="sc-v" style="color:var(--blue)">48</div><div class="sc-l">Bài hoàn thành</div><div class="sc-ch pos">↑ +4 tuần này</div></div>
+      <div class="sc"><div class="sc-ic">🎯</div><div class="sc-v" style="color:var(--green)">87%</div><div class="sc-l">Độ chính xác</div><div class="sc-ch pos">↑ tốt hơn 5%</div></div>
+      <div class="sc"><div class="sc-ic">🎤</div><div class="sc-v" style="color:var(--purple)">24</div><div class="sc-l">Buổi luyện nói</div><div class="sc-ch pos">+3 tuần này</div></div>
+    </div>
+    <div class="sec-hdr"><h3>📖 Tiếp tục học</h3><span class="see-all" onclick="go('lessons',document.querySelector('[onclick*=lessons]'))">Xem tất cả →</span></div>
+    <div class="lc-g">
+      <div class="lc" onclick="go('quiz',document.querySelector('[onclick*=quiz]'))"><div class="lc-th" style="background:linear-gradient(135deg,#EEF4FF,#DBE8FF)">🐾<span class="lc-bk" style="background:rgba(79,140,255,.15);color:var(--blue)">Đang học</span></div><div class="lc-bd"><div class="lc-ti">Động vật (Animals)</div><div class="lc-me">📝 Từ vựng · 12 từ</div><div class="lc-pb"><div class="lc-pf" style="width:75%"></div></div><div class="lc-pt">75% · 9/12 từ</div></div></div>
+      <div class="lc" onclick="go('speaking',document.querySelector('[onclick*=speaking]'))"><div class="lc-th" style="background:linear-gradient(135deg,#F5EEFF,#E8D8FF)">🎤<span class="lc-bk" style="background:rgba(155,114,207,.15);color:var(--purple)">Luyện nói</span></div><div class="lc-bd"><div class="lc-ti">Phát âm màu sắc</div><div class="lc-me">🎤 Speaking · 8 từ</div><div class="lc-pb"><div class="lc-pf" style="width:25%;background:linear-gradient(90deg,var(--purple),#B48EFF)"></div></div><div class="lc-pt" style="color:var(--purple)">25% · 2/8 từ</div></div></div>
+      <div class="lc"><div class="lc-th" style="background:linear-gradient(135deg,#F0FFF4,#C8F7D0)">👪<span class="lc-bk" style="background:rgba(107,203,119,.15);color:var(--green)">Hoàn thành</span></div><div class="lc-bd"><div class="lc-ti">Gia đình (Family)</div><div class="lc-me">👂 Listening · 10 từ</div><div class="lc-pb"><div class="lc-pf" style="width:100%;background:linear-gradient(90deg,var(--green),#52C788)"></div></div><div class="lc-pt" style="color:var(--green)">100% ✓ Hoàn thành</div></div></div>
+    </div>
+    <div class="two-c">
+      <div class="card"><div class="sec-hdr"><h3>📋 Hoạt động gần đây</h3></div>
+        <div class="act-i"><div class="act-ic" style="background:rgba(79,140,255,.1)">📝</div><div class="act-in"><div class="act-t">Animals – Trắc nghiệm</div><div class="act-tm">Hôm nay · 15 phút</div></div><div class="act-sc" style="color:var(--green)">95/100</div></div>
+        <div class="act-i"><div class="act-ic" style="background:rgba(155,114,207,.1)">🎤</div><div class="act-in"><div class="act-t">Speaking – Animals</div><div class="act-tm">Hôm nay · 8 phút</div></div><div class="act-sc" style="color:var(--purple)">88 pts</div></div>
+        <div class="act-i"><div class="act-ic" style="background:rgba(255,217,61,.14)">👂</div><div class="act-in"><div class="act-t">Listening – Colors</div><div class="act-tm">Hôm qua · 12 phút</div></div><div class="act-sc" style="color:var(--blue)">92/100</div></div>
+        <div class="act-i"><div class="act-ic" style="background:rgba(107,203,119,.1)">📖</div><div class="act-in"><div class="act-t">Grammar – To Be</div><div class="act-tm">3 ngày trước</div></div><div class="act-sc" style="color:var(--orange)">78/100</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="card"><div class="sec-hdr"><h3>🏅 Huy hiệu mới</h3></div>
+          <div class="ach-g3">
+            <div class="ach-i on"><div class="ach-em">🔥</div><div class="ach-nm">7 ngày</div></div>
+            <div class="ach-i on"><div class="ach-em">🎤</div><div class="ach-nm">Luyện nói</div></div>
+            <div class="ach-i on"><div class="ach-em">🌟</div><div class="ach-nm">100 điểm</div></div>
+            <div class="ach-i"><div class="ach-em">💎</div><div class="ach-nm">30 ngày</div></div>
+            <div class="ach-i"><div class="ach-em">👑</div><div class="ach-nm">Top 1</div></div>
+            <div class="ach-i"><div class="ach-em">🚀</div><div class="ach-nm">Lv.10</div></div>
+          </div>
+        </div>
+        <div class="card"><div class="sec-hdr"><h3>🏆 Bảng xếp hạng</h3></div>
+          <div class="lb-i"><div class="lb-r" style="color:var(--yellow)">🥇</div><div class="lb-av" style="background:rgba(255,217,61,.14)">🦊</div><div class="lb-nm">Thanh Tâm</div><div class="lb-pt">3,200</div></div>
+          <div class="lb-i"><div class="lb-r" style="color:#aaa">🥈</div><div class="lb-av" style="background:rgba(155,114,207,.14)">🐱</div><div class="lb-nm">Gia Huy</div><div class="lb-pt">2,850</div></div>
+          <div class="lb-i me"><div class="lb-r" style="color:var(--orange)">🥉</div><div class="lb-av" style="background:rgba(79,140,255,.14)">🐼</div><div class="lb-nm">Minh Khôi (bạn)</div><div class="lb-pt">2,450</div></div>
+          <div class="lb-i"><div class="lb-r" style="color:var(--muted)">4</div><div class="lb-av" style="background:rgba(107,203,119,.14)">🐸</div><div class="lb-nm">Thu Hà</div><div class="lb-pt">2,100</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LESSONS -->
+  <div class="page" id="page-lessons">
+    <div style="margin-bottom:18px"><h2 style="font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:800">📚 Bài học</h2><p style="color:var(--muted);font-weight:600;margin-top:3px">Chọn chủ đề bạn muốn học hôm nay</p></div>
+    <div class="filter-row">
+      <button class="fbtn active" onclick="setFil(this)">Tất cả</button>
+      <button class="fbtn" onclick="setFil(this)">📝 Từ vựng</button>
+      <button class="fbtn" onclick="setFil(this)">🎤 Speaking</button>
+      <button class="fbtn" onclick="setFil(this)">👂 Listening</button>
+      <button class="fbtn" onclick="setFil(this)">📖 Grammar</button>
+    </div>
+    <div class="topic-g">
+      <div class="topic-c" onclick="go('quiz',document.querySelector('[onclick*=quiz]'))"><div class="tpic-em">🐾</div><div class="tpic-nm">Động vật</div><div class="tpic-ct">12 từ · 3 bài</div><div class="tpic-pb"><div class="tpic-pf" style="width:75%;background:linear-gradient(90deg,var(--blue),var(--blight))"></div></div></div>
+      <div class="topic-c" onclick="go('speaking',document.querySelector('[onclick*=speaking]'))"><div class="tpic-em">🔴</div><div class="tpic-nm">Màu sắc</div><div class="tpic-ct">8 từ · 2 bài</div><div class="tpic-pb"><div class="tpic-pf" style="width:25%;background:linear-gradient(90deg,var(--purple),#B48EFF)"></div></div></div>
+      <div class="topic-c"><div class="tpic-em">👪</div><div class="tpic-nm">Gia đình</div><div class="tpic-ct">10 từ · 3 bài</div><div class="tpic-pb"><div class="tpic-pf" style="width:100%;background:linear-gradient(90deg,var(--green),#52C788)"></div></div></div>
+      <div class="topic-c"><div class="tpic-em">🍎</div><div class="tpic-nm">Thức ăn</div><div class="tpic-ct">15 từ · 4 bài</div><div class="tpic-pb"><div class="tpic-pf" style="width:40%;background:linear-gradient(90deg,var(--orange),#FFD93D)"></div></div></div>
+      <div class="topic-c"><div class="tpic-em">🏠</div><div class="tpic-nm">Ngôi nhà</div><div class="tpic-ct">10 từ · 3 bài</div><div class="tpic-pb"><div class="tpic-pf" style="width:0%"></div></div></div>
+      <div class="topic-c"><div class="tpic-em">🚗</div><div class="tpic-nm">Phương tiện</div><div class="tpic-ct">8 từ · 2 bài</div><div class="tpic-pb"><div class="tpic-pf" style="width:0%"></div></div></div>
+      <div class="topic-c"><div class="tpic-em">🧸</div><div class="tpic-nm">Đồ chơi</div><div class="tpic-ct">8 từ · 2 bài</div><div class="tpic-pb"><div class="tpic-pf" style="width:0%"></div></div></div>
+      <div class="topic-c"><div class="tpic-em">☀️</div><div class="tpic-nm">Thời tiết</div><div class="tpic-ct">6 từ · 2 bài</div><div class="tpic-pb"><div class="tpic-pf" style="width:0%"></div></div></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="page" id="page-quiz">
+    <div class="quiz-wrap">
+      <div id="qmain">
+        <div class="q-topbar">
+          <div class="q-close" onclick="go('lessons',document.querySelector('[onclick*=lessons]'))">✕</div>
+          <div class="q-prog"><div class="q-pf" id="qpf" style="width:20%"></div></div>
+          <div class="q-xp">⭐ +10 XP</div>
+          <div class="q-hts" id="qhts">❤️❤️❤️</div>
+        </div>
+        <div class="q-type-bar">
+          <button class="qtb active" onclick="setQT('mcq',this)">🖼️ Nhận diện hình</button>
+          <button class="qtb" onclick="setQT('meaning',this)">📖 Dịch nghĩa</button>
+          <button class="qtb" onclick="setQT('spell',this)">✏️ Điền từ</button>
+        </div>
+        <div class="qcard">
+          <span class="q-badge" id="qbadge">🖼️ Nhận diện hình</span>
+          <div class="qimg-wrap revealed" id="qimgwrap">
+            <span class="qimg-em" id="qimgem">🐘</span>
+            <div class="qimg-overlay" id="qimgov" style="display:none"></div>
+          </div>
+          <div class="hint-note" id="hnote" style="display:none"></div>
+          <div class="q-txt" id="qtxt">Con này tiếng Anh là gì?</div>
+          <div class="q-opts" id="qopts"></div>
+        </div>
+        <div id="qfb" style="display:none"></div>
+        <button class="btn-cont" id="qnext" style="display:none" onclick="nextQ()">Tiếp tục →</button>
+      </div>
+      <div class="result" id="qresult">
+        <div id="rem">🏆</div>
+        <div class="r-ti" id="rti">Tuyệt vời!</div>
+        <div class="r-sub" id="rsub">Hoàn thành bài tập!</div>
+        <div class="r-stats">
+          <div class="rs-it"><div class="rs-v" style="color:var(--blue)" id="rsc">0</div><div class="rs-l">Điểm</div></div>
+          <div class="rs-it"><div class="rs-v" style="color:var(--green)" id="rcr">0/5</div><div class="rs-l">Đúng</div></div>
+          <div class="rs-it"><div class="rs-v" style="color:var(--yellow)" id="rxp">+0</div><div class="rs-l">XP</div></div>
+        </div>
+        <button class="btn-cont" onclick="initQ()">🔄 Làm lại</button><br><br>
+        <span onclick="go('lessons',document.querySelector('[onclick*=lessons]'))" style="cursor:pointer;color:var(--muted);font-weight:700;font-size:.86rem">← Về bài học</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPEAKING -->
+  <div class="page" id="page-speaking">
+    <div class="spk-hero">
+      <div class="spk-hero-ic">🎤</div>
+      <div style="flex:1">
+        <h2>Luyện nói tiếng Anh</h2>
+        <p>Nghe mẫu → Nhấn mic → Nói theo → Nhận điểm AI ngay!</p>
+      </div>
+      <div style="text-align:center;background:rgba(255,255,255,.15);border-radius:var(--rs);padding:10px 16px">
+        <div style="font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:800;color:white">24</div>
+        <div style="font-size:.7rem;font-weight:800;color:rgba(255,255,255,.8)">Buổi luyện nói</div>
+      </div>
+    </div>
+    <div class="spk-topics">
+      <div class="spk-topic active" onclick="setSpkT(this,'animals')"><div class="st-ic">🐾</div><div class="st-nm">Động vật</div><div class="st-ct">8 từ</div><div class="st-bar"><div class="st-bf" style="width:75%"></div></div></div>
+      <div class="spk-topic" onclick="setSpkT(this,'colors')"><div class="st-ic">🌈</div><div class="st-nm">Màu sắc</div><div class="st-ct">6 từ</div><div class="st-bar"><div class="st-bf" style="width:30%"></div></div></div>
+      <div class="spk-topic" onclick="setSpkT(this,'family')"><div class="st-ic">👪</div><div class="st-nm">Gia đình</div><div class="st-ct">6 từ</div><div class="st-bar"><div class="st-bf" style="width:0%"></div></div></div>
+    </div>
+    <div style="margin-bottom:12px"><div class="sec-hdr"><h3>📝 Chọn từ muốn luyện</h3></div></div>
+    <div class="word-list" id="wordList"></div>
+    <div class="spk-practice">
+      <div class="spk-pr-hdr">
+        <h3 id="spkTitle">🐘 Elephant</h3>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span style="font-size:.7rem;font-weight:800;color:var(--muted)" id="spkNum">Từ 1/8</span>
+          <button onclick="nextSpkW()" style="background:rgba(155,114,207,.1);border:2px solid rgba(155,114,207,.3);color:var(--purple);border-radius:50px;padding:3px 10px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.74rem;cursor:pointer">Từ tiếp →</button>
+        </div>
+      </div>
+      <div class="spk-pr-body">
+        <div class="word-display">
+          <div class="wd-img" id="spkEm">🐘</div>
+          <div class="wd-word" id="spkW">Elephant</div>
+          <div class="wd-ph" id="spkPh">/ˈɛlɪfənt/</div>
+          <div class="wd-mean" id="spkMn">Con voi</div>
+        </div>
+        <div class="play-word" id="playBtn" onclick="playW()"><span id="playIc">🔊</span><span id="playTx">Nghe mẫu</span></div>
+        <div class="mic-area">
+          <div class="mic-ring">
+            <button class="mic-btn" id="micBtn" onclick="toggleMic()">🎤</button>
+            <div class="mic-ring-out" id="micRing"></div>
+          </div>
+          <div class="waveform" id="waveform"></div>
+          <div class="mic-lbl" id="micLbl">Nhấn để ghi âm</div>
+        </div>
+        <div class="spk-score-box" id="spkScoreBox">
+          <div class="spk-sc-val" id="spkScVal">--</div>
+          <div class="spk-sc-lbl">điểm phát âm</div>
+          <div class="spk-sc-msg" id="spkScMsg"></div>
+          <div class="score-bars" id="scoreBars"></div>
+          <button class="btn-cont" style="margin-top:12px" onclick="nextSpkW()">Từ tiếp theo →</button>
+        </div>
+      </div>
+    </div>
+    <div class="spk-bottom">
+      <div class="card"><div class="sec-hdr"><h3>📈 Lịch sử luyện nói</h3></div><div id="spkHist">
+        <div class="shi"><div class="shi-w">🐘 Elephant</div><div><div class="shi-s" style="color:var(--green)">92 pts</div><div class="shi-bar"><div class="shi-bf" style="width:92%;background:var(--green)"></div></div></div></div>
+        <div class="shi"><div class="shi-w">🦁 Lion</div><div><div class="shi-s" style="color:var(--blue)">78 pts</div><div class="shi-bar"><div class="shi-bf" style="width:78%;background:var(--blue)"></div></div></div></div>
+        <div class="shi"><div class="shi-w">🐯 Tiger</div><div><div class="shi-s" style="color:var(--orange)">65 pts</div><div class="shi-bar"><div class="shi-bf" style="width:65%;background:var(--orange)"></div></div></div></div>
+        <div class="shi"><div class="shi-w">🦒 Giraffe</div><div><div class="shi-s" style="color:var(--red)">51 pts</div><div class="shi-bar"><div class="shi-bf" style="width:51%;background:var(--red)"></div></div></div></div>
+      </div></div>
+      <div class="card"><div class="sec-hdr"><h3>💡 Mẹo phát âm</h3></div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <div style="background:rgba(155,114,207,.07);border-radius:10px;padding:10px;border-left:3px solid var(--purple)"><div style="font-weight:800;font-size:.82rem;margin-bottom:2px">📌 "Elephant"</div><div style="font-size:.76rem;color:var(--muted);font-weight:600;line-height:1.5">Nhấn âm <strong style="color:var(--purple)">EL</strong>: "EL-e-phant". Âm "ph" đọc như "f".</div></div>
+          <div style="background:rgba(79,140,255,.07);border-radius:10px;padding:10px;border-left:3px solid var(--blue)"><div style="font-weight:800;font-size:.82rem;margin-bottom:2px">📌 "Giraffe"</div><div style="font-size:.76rem;color:var(--muted);font-weight:600;line-height:1.5">Nhấn âm <strong style="color:var(--blue)">RAFFE</strong>: "ji-RAF". Âm "g" mềm như "j".</div></div>
+          <div style="background:rgba(107,203,119,.07);border-radius:10px;padding:10px;border-left:3px solid var(--green)"><div style="font-weight:800;font-size:.82rem;margin-bottom:2px">✅ Lời khuyên</div><div style="font-size:.76rem;color:var(--muted);font-weight:600;line-height:1.5">Nghe mẫu 2 lần trước khi nói. Nói chậm rõ trước, rồi tăng tốc.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div class="page" id="page-schedule">
+    <div style="margin-bottom:16px"><h2 style="font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:800">📅 Lịch học</h2><p style="color:var(--muted);font-weight:600;margin-top:3px">Thứ Ba, 4 tháng 3, 2025</p></div>
+    <div class="day-row" id="dayRow"></div>
+    <div class="sch-list">
+      <div class="sch-i"><div class="sch-tc"><div class="sch-hr">08:00</div><div class="sch-pe">Sáng</div></div><div class="sch-dv"></div><div class="sch-in"><div class="sch-nm">🖥️ Lớp trực tuyến – Animals</div><div class="sch-te">Cô Nguyễn Lan · Lớp 2A</div></div><span class="sch-st slive">🔴 Đang diễn ra</span><a href="https://www.classin.com/s/a/?cid=299605927" target="_blank"><button class="join-btn">Vào lớp</button></a></div>
+      <div class="sch-i"><div class="sch-tc"><div class="sch-hr">14:00</div><div class="sch-pe">Chiều</div></div><div class="sch-dv"></div><div class="sch-in"><div class="sch-nm">🎤 Luyện nói với AI</div><div class="sch-te">AI Tutor · Tự luyện</div></div><span class="sch-st ssoon">⏰ Sắp tới</span></div>
+      <div class="sch-i" style="opacity:.6"><div class="sch-tc"><div class="sch-hr">16:30</div><div class="sch-pe">Chiều</div></div><div class="sch-dv"></div><div class="sch-in"><div class="sch-nm">📝 Ôn từ vựng Colors</div><div class="sch-te">Tự học · 30 phút</div></div><span class="sch-st sdone">✅ Hoàn thành</span></div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:.98rem;margin-bottom:13px">➕ Đặt lịch học mới</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:11px">
+        <div><div style="font-size:.7rem;font-weight:800;color:var(--muted);margin-bottom:4px">GIÁO VIÊN</div><select style="width:100%;padding:8px 10px;border:2px solid #E8EFFF;border-radius:10px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;background:var(--bg);outline:none"><option>Cô Nguyễn Lan</option><option>Thầy Trần Nam</option></select></div>
+        <div><div style="font-size:.7rem;font-weight:800;color:var(--muted);margin-bottom:4px">NGÀY</div><input type="date" style="width:100%;padding:8px 10px;border:2px solid #E8EFFF;border-radius:10px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;background:var(--bg);outline:none"></div>
+        <div><div style="font-size:.7rem;font-weight:800;color:var(--muted);margin-bottom:4px">GIỜ</div><select style="width:100%;padding:8px 10px;border:2px solid #E8EFFF;border-radius:10px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;background:var(--bg);outline:none"><option>08:00</option><option>09:00</option><option>14:00</option><option>16:00</option></select></div>
+      </div>
+      <button onclick="alert('Đặt lịch thành công!')" style="background:linear-gradient(135deg,var(--blue),var(--blight));color:white;border:none;padding:9px 22px;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.86rem;cursor:pointer">📅 Đặt lịch</button>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="page" id="page-profile">
+    <div class="prof-hero">
+      <div class="prof-av">🐼</div>
+      <div style="flex:1"><div class="prof-nm">Nguyễn Minh Khôi</div><div class="prof-gr">Học sinh lớp 2A · KidsEnglish</div><div class="xp-row"><span style="font-size:.72rem;font-weight:800;opacity:.85">Level 8</span><div class="xpb"><div class="xpbf"></div></div><span class="xp-tx">2,450 / 3,600 XP → Lv.9</span></div></div>
+      <div style="text-align:center;background:rgba(255,255,255,.14);border-radius:var(--rs);padding:9px 14px"><div style="font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;color:white">🔥7</div><div style="font-size:.68rem;font-weight:800;color:rgba(255,255,255,.8)">Ngày streak</div></div>
+    </div>
+    <div class="prof-sg">
+      <div class="psc"><div class="psv">48</div><div class="psl">📚 Bài hoàn thành</div></div>
+      <div class="psc"><div class="psv" style="color:var(--purple)">24</div><div class="psl">🎤 Buổi luyện nói</div></div>
+      <div class="psc"><div class="psv" style="color:var(--green)">87%</div><div class="psl">🎯 Độ chính xác</div></div>
+    </div>
+    <div class="sec-hdr" style="margin-bottom:11px"><h3>🏅 Bộ sưu tập huy hiệu</h3></div>
+    <div class="card"><div class="ach-all">
+      <div class="aa-i on"><div style="font-size:1.7rem">🔥</div><div style="font-size:.64rem;font-weight:800;margin-top:2px">7 ngày</div></div>
+      <div class="aa-i on"><div style="font-size:1.7rem">⚡</div><div style="font-size:.64rem;font-weight:800;margin-top:2px">Nhanh nhẹn</div></div>
+      <div class="aa-i on"><div style="font-size:1.7rem">🌟</div><div style="font-size:.64rem;font-weight:800;margin-top:2px">100 điểm</div></div>
+      <div class="aa-i on"><div style="font-size:1.7rem">📚</div><div style="font-size:.64rem;font-weight:800;margin-top:2px">10 bài học</div></div>
+      <div class="aa-i on"><div style="font-size:1.7rem">🎤</div><div style="font-size:.64rem;font-weight:800;margin-top:2px">Luyện nói</div></div>
+      <div class="aa-i on"><div style="font-size:1.7rem">👂</div><div style="font-size:.64rem;font-weight:800;margin-top:2px">Listening</div></div>
+      <div class="aa-i on"><div style="font-size:1.7rem">🏆</div><div style="font-size:.64rem;font-weight:800;margin-top:2px">Top 3</div></div>
+      <div class="aa-i on"><div style="font-size:1.7rem">🐾</div><div style="font-size:.64rem;font-weight:800;margin-top:2px">Animals</div></div>
+      <div class="aa-i on"><div style="font-size:1.7rem">👪</div><div style="font-size:.64rem;font-weight:800;margin-top:2px">Family</div></div>
+      <div class="aa-i on"><div style="font-size:1.7rem">🎯</div><div style="font-size:.64rem;font-weight:800;margin-top:2px">Chính xác</div></div>
+      <div class="aa-i"><div style="font-size:1.7rem">💎</div><div style="font-size:.64rem;font-weight:800;margin-top:2px">30 ngày</div></div>
+      <div class="aa-i"><div style="font-size:1.7rem">👑</div><div style="font-size:.64rem;font-weight:800;margin-top:2px">Top 1</div></div>
+      <div class="aa-i"><div style="font-size:1.7rem">🌈</div><div style="font-size:.64rem;font-weight:800;margin-top:2px">Hoàn hảo</div></div>
+      <div class="aa-i"><div style="font-size:1.7rem">🚀</div><div style="font-size:.64rem;font-weight:800;margin-top:2px">Level 10</div></div>
+      <div class="aa-i"><div style="font-size:1.7rem">🔮</div><div style="font-size:.64rem;font-weight:800;margin-top:2px">Huyền thoại</div></div>
+    </div></div>
+  </div>
+</div>
+<script>
+const titles={dashboard:'Trang chủ',lessons:'Bài học',quiz:'Luyện tập',speaking:'Luyện nói',schedule:'Lịch học',profile:'Thành tích'};
+function go(name,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(el)el.classList.add('active');
+  document.getElementById('ptitle').textContent=titles[name]||name;
+  if(name==='quiz')initQ();
+  if(name==='speaking')initSpk();
+}
+function setFil(b){document.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active')}
+
+// DAY PICKER
+const dn=['CN','T2','T3','T4','T5','T6','T7'];
+const dr=document.getElementById('dayRow');
+for(let i=0;i<7;i++){const d=document.createElement('div');d.className='day-btn'+(i===2?' today':i===4||i===6?' has':'');d.innerHTML='<div class="day-d">'+(i+3<10?'0'+(i+3):i+3)+'</div><div class="day-n">'+dn[i]+'</div>';d.onclick=()=>{document.querySelectorAll('.day-btn').forEach(x=>x.classList.remove('today'));d.classList.add('today')};dr.appendChild(d);}
+
+// QUIZ
+const qdata=[
+  {img:'🐘',txt:'Con này tiếng Anh là gì?',ans:'Elephant',opts:['Elephant','Giraffe','Lion','Tiger']},
+  {img:'🦒',txt:'Con này tiếng Anh là gì?',ans:'Giraffe',opts:['Elephant','Giraffe','Zebra','Hippo']},
+  {img:'🐬',txt:'Con này tiếng Anh là gì?',ans:'Dolphin',opts:['Dolphin','Shark','Whale','Fish']},
+  {img:'🦋',txt:'Con này tiếng Anh là gì?',ans:'Butterfly',opts:['Butterfly','Bee','Ant','Moth']},
+  {img:'🐧',txt:'Con này tiếng Anh là gì?',ans:'Penguin',opts:['Penguin','Duck','Owl','Eagle']},
+];
+let qi=0,sc=0,hearts=3,answered=false,hintUsed=false,qtype='mcq';
+
+function setQT(t,b){qtype=t;document.querySelectorAll('.qtb').forEach(x=>x.classList.remove('active'));b.classList.add('active');initQ();}
+function initQ(){qi=0;sc=0;hearts=3;answered=false;hintUsed=false;document.getElementById('qmain').style.display='';document.getElementById('qresult').style.display='none';renderQ();}
+
+function renderQ(){
+  const q=qdata[qi];answered=false;hintUsed=false;
+  document.getElementById('qpf').style.width=((qi+1)/qdata.length*100)+'%';
+  document.getElementById('qhts').textContent=['❤️❤️❤️','❤️❤️🖤','❤️🖤🖤','🖤🖤🖤'][3-hearts]||'🖤🖤🖤';
+  document.getElementById('qfb').style.display='none';
+  document.getElementById('qnext').style.display='none';
+  document.getElementById('qbadge').textContent=qtype==='mcq'?'🖼️ Nhận diện hình':qtype==='meaning'?'📖 Dịch nghĩa':'✏️ Điền từ';
+  // image always hidden at start
+  const wrap=document.getElementById('qimgwrap');const em=document.getElementById('qimgem');const ov=document.getElementById('qimgov');
+  em.textContent=q.img;wrap.className='qimg-wrap revealed';ov.style.display='none';
+  document.getElementById('hnote').style.display='none';
+  if(qtype==='spell'){
+    document.getElementById('qtxt').textContent='Nhìn gợi ý rồi điền từ tiếng Anh:';
+    document.getElementById('qopts').innerHTML='<div style="grid-column:1/-1"><input id="si" type="text" placeholder="Gõ từ tiếng Anh..." autocomplete="off" style="width:100%;padding:13px 16px;border:2.5px solid #E8EFFF;border-radius:var(--rs);font-family:Nunito,sans-serif;font-size:.95rem;font-weight:800;outline:none;background:var(--bg)" onkeydown="if(event.key===\'Enter\')checkSpell()"><button onclick="checkSpell()" class="btn-cont" style="margin-top:9px">Kiểm tra ✓</button></div>';
+  } else {
+    document.getElementById('qtxt').textContent=q.txt;
+    const letters=['A','B','C','D'];
+    const sh=[...q.opts].sort(()=>Math.random()-.5);
+    document.getElementById('qopts').innerHTML=sh.map((o,i)=>`<div class="qopt" onclick="pickOpt(this,'${o}','${q.ans}')"><div class="q-let">${letters[i]}</div>${o}</div>`).join('');
+  }
+}
+
+function revealImg(){
+  const wrap=document.getElementById('qimgwrap');
+  if(wrap.classList.contains('revealed'))return;
+  wrap.classList.remove('hidden');wrap.classList.add('revealed');
+  if(!answered){hintUsed=true;document.getElementById('hnote').style.display='block';}
+}
+
+function lockAndShow(ans){
+  document.querySelectorAll('.qopt').forEach(o=>o.classList.add('locked'));
+  const wrap=document.getElementById('qimgwrap');
+  if(!wrap.classList.contains('revealed')){wrap.classList.remove('hidden');wrap.classList.add('revealed');}
+  document.getElementById('qfb').style.display='flex';document.getElementById('qnext').style.display='block';
+  document.getElementById('qhts').textContent=['❤️❤️❤️','❤️❤️🖤','❤️🖤🖤','🖤🖤🖤'][3-hearts]||'🖤🖤🖤';
+}
+
+function pickOpt(el,val,ans){
+  if(answered)return;answered=true;
+  const fb=document.getElementById('qfb');
+  if(val===ans){el.classList.add('correct');const pts=hintUsed?15:20;sc+=pts;fb.className='fb-bar fb-ok';fb.innerHTML=hintUsed?'✅ Đúng! (gợi ý: +15 điểm)':'✅ Chính xác! +20 điểm ⭐';}
+  else{el.classList.add('wrong');hearts=Math.max(0,hearts-1);document.querySelectorAll('.qopt').forEach(o=>{if(o.textContent.includes(ans))o.classList.add('correct')});fb.className='fb-bar fb-no';fb.innerHTML='❌ Sai! Đáp án: <strong>'+ans+'</strong>';}
+  lockAndShow(ans);
+}
+
+function checkSpell(){
+  const inp=document.getElementById('si');if(!inp||answered)return;
+  const val=inp.value.trim(),ans=qdata[qi].ans;answered=true;inp.disabled=true;
+  const fb=document.getElementById('qfb');
+  if(val.toLowerCase()===ans.toLowerCase()){sc+=hintUsed?15:20;inp.style.borderColor='var(--green)';inp.style.background='rgba(107,203,119,.1)';fb.className='fb-bar fb-ok';fb.innerHTML='✅ Đúng! <strong>'+ans+'</strong> ⭐';}
+  else{hearts=Math.max(0,hearts-1);inp.style.borderColor='var(--red)';inp.style.background='rgba(255,107,107,.08)';fb.className='fb-bar fb-no';fb.innerHTML='❌ Sai! Đáp án: <strong>'+ans+'</strong>';}
+  lockAndShow(ans);
+}
+
+function nextQ(){qi++;if(qi>=qdata.length){showResult();return;}renderQ();}
+function showResult(){
+  document.getElementById('qmain').style.display='none';document.getElementById('qresult').style.display='block';
+  const cor=Math.round(sc/20);
+  document.getElementById('rem').textContent=sc>=80?'🏆':sc>=60?'😊':'💪';
+  document.getElementById('rti').textContent=sc>=80?'Xuất sắc! 🌟':sc>=60?'Tốt lắm! 👍':'Cố lên nhé! 💪';
+  document.getElementById('rsc').textContent=sc;document.getElementById('rcr').textContent=cor+'/5';document.getElementById('rxp').textContent='+'+cor*10+' XP';
+}
+
+// SPEAKING
+const spkData={
+  animals:{words:[{w:'Elephant',ph:'/ˈɛlɪfənt/',mn:'Con voi',em:'🐘'},{w:'Lion',ph:'/ˈlaɪən/',mn:'Con sư tử',em:'🦁'},{w:'Tiger',ph:'/ˈtaɪɡər/',mn:'Con hổ',em:'🐯'},{w:'Giraffe',ph:'/dʒɪˈræf/',mn:'Hươu cao cổ',em:'🦒'},{w:'Monkey',ph:'/ˈmʌŋki/',mn:'Con khỉ',em:'🐒'},{w:'Penguin',ph:'/ˈpɛŋɡwɪn/',mn:'Chim cánh cụt',em:'🐧'},{w:'Dolphin',ph:'/ˈdɒlfɪn/',mn:'Cá heo',em:'🐬'},{w:'Butterfly',ph:'/ˈbʌtəflaɪ/',mn:'Con bướm',em:'🦋'}]},
+  colors:{words:[{w:'Red',ph:'/rɛd/',mn:'Màu đỏ',em:'🔴'},{w:'Blue',ph:'/bluː/',mn:'Màu xanh dương',em:'🔵'},{w:'Green',ph:'/ɡriːn/',mn:'Màu xanh lá',em:'🟢'},{w:'Yellow',ph:'/ˈjɛloʊ/',mn:'Màu vàng',em:'🟡'},{w:'Purple',ph:'/ˈpɜːpəl/',mn:'Màu tím',em:'🟣'},{w:'Orange',ph:'/ˈɒrɪndʒ/',mn:'Màu cam',em:'🟠'}]},
+  family:{words:[{w:'Mother',ph:'/ˈmʌðər/',mn:'Mẹ',em:'👩'},{w:'Father',ph:'/ˈfɑːðər/',mn:'Bố',em:'👨'},{w:'Sister',ph:'/ˈsɪstər/',mn:'Chị/Em gái',em:'👧'},{w:'Brother',ph:'/ˈbrʌðər/',mn:'Anh/Em trai',em:'👦'},{w:'Grandmother',ph:'/ˈɡrænmʌðər/',mn:'Bà',em:'👵'},{w:'Grandfather',ph:'/ˈɡrænfɑːðər/',mn:'Ông',em:'👴'}]},
+};
+let curT='animals',curWI=0,isRec=false,wvIv=null,scTo=null;
+
+function setSpkT(el,t){document.querySelectorAll('.spk-topic').forEach(x=>x.classList.remove('active'));el.classList.add('active');curT=t;curWI=0;initSpk();}
+function initSpk(){renderChips();loadSpkW(0);}
+function renderChips(){
+  const ws=spkData[curT].words;
+  document.getElementById('wordList').innerHTML=ws.map((w,i)=>`<div class="wl-chip${i===curWI?' active':''}" onclick="loadSpkW(${i})">${w.em} ${w.w}</div>`).join('');
+}
+function loadSpkW(idx){
+  curWI=idx;const ws=spkData[curT].words;const w=ws[idx];
+  document.getElementById('spkEm').textContent=w.em;document.getElementById('spkW').textContent=w.w;document.getElementById('spkPh').textContent=w.ph;document.getElementById('spkMn').textContent=w.mn;
+  document.getElementById('spkTitle').textContent=w.em+' '+w.w;document.getElementById('spkNum').textContent='Từ '+(idx+1)+'/'+ws.length;
+  document.getElementById('spkScoreBox').style.display='none';document.getElementById('micLbl').textContent='Nhấn để ghi âm';document.getElementById('micLbl').className='mic-lbl';
+  document.getElementById('micBtn').className='mic-btn';document.getElementById('waveform').innerHTML='';document.getElementById('playBtn').className='play-word';document.getElementById('playIc').textContent='🔊';document.getElementById('playTx').textContent='Nghe mẫu';
+  if(isRec){clearInterval(wvIv);isRec=false;}
+  renderChips();
+}
+function nextSpkW(){loadSpkW((curWI+1)%spkData[curT].words.length);}
+function playW(){
+  const w=spkData[curT].words[curWI];const pb=document.getElementById('playBtn');
+  if('speechSynthesis' in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w.w);u.lang='en-US';u.rate=0.8;pb.className='play-word playing';document.getElementById('playIc').textContent='🎵';document.getElementById('playTx').textContent='Đang phát...';u.onend=()=>{pb.className='play-word';document.getElementById('playIc').textContent='🔊';document.getElementById('playTx').textContent='Nghe lại';};window.speechSynthesis.speak(u);}
+  else{pb.className='play-word playing';setTimeout(()=>{pb.className='play-word';document.getElementById('playIc').textContent='🔊';document.getElementById('playTx').textContent='Nghe lại';},1200);}
+}
+function toggleMic(){if(isRec)stopRec();else startRec();}
+function startRec(){
+  isRec=true;document.getElementById('micBtn').className='mic-btn rec';document.getElementById('micLbl').textContent='🔴 Đang ghi âm... nói ngay!';document.getElementById('micLbl').className='mic-lbl on';document.getElementById('spkScoreBox').style.display='none';
+  const wf=document.getElementById('waveform');wf.innerHTML='';const bars=[];
+  for(let i=0;i<22;i++){const b=document.createElement('div');b.className='wv-b';wf.appendChild(b);bars.push(b);}
+  wvIv=setInterval(()=>{if(isRec)bars.forEach(b=>{b.style.height=(Math.random()*30+4)+'px';b.style.opacity=0.5+Math.random()*.5;});},80);
+  scTo=setTimeout(()=>stopRec(),3200);
+}
+function stopRec(){
+  if(!isRec)return;isRec=false;clearInterval(wvIv);clearTimeout(scTo);
+  document.getElementById('micBtn').className='mic-btn';document.getElementById('micLbl').textContent='✅ Đã ghi âm!';document.getElementById('micLbl').className='mic-lbl';
+  document.querySelectorAll('.wv-b').forEach(b=>b.style.height='4px');
+  setTimeout(showSpkScore,600);
+}
+function showSpkScore(){
+  const w=spkData[curT].words[curWI];
+  const pr=Math.floor(Math.random()*30+60),fl=Math.floor(Math.random()*30+55),ac=Math.floor(Math.random()*35+50);
+  const tot=Math.round((pr+fl+ac)/3);
+  document.getElementById('spkScVal').textContent=tot;document.getElementById('spkScVal').style.color=tot>=80?'var(--green)':tot>=60?'var(--blue)':'var(--orange)';
+  document.getElementById('spkScMsg').textContent=tot>=85?'🌟 Xuất sắc! Phát âm rất chuẩn!':tot>=70?'👍 Tốt lắm! Tiếp tục luyện!':tot>=55?'💪 Ổn rồi, cần luyện thêm!':'🔁 Thử lại, nghe mẫu trước!';
+  const clr=['var(--blue)','var(--purple)','var(--green)'];const lbl=['Phát âm','Trôi chảy','Chính xác'];const vals=[pr,fl,ac];
+  document.getElementById('scoreBars').innerHTML=vals.map((v,i)=>`<div class="sb-it"><div class="sb-circle" style="border-color:${clr[i]};color:${clr[i]}">${v}</div><div class="sb-lbl">${lbl[i]}</div></div>`).join('');
+  document.getElementById('spkScoreBox').style.display='block';
+  // add to history
+  const hist=document.getElementById('spkHist');const c=tot>=80?'var(--green)':tot>=60?'var(--blue)':'var(--orange)';
+  const item=document.createElement('div');item.className='shi';item.innerHTML=`<div class="shi-w">${w.em} ${w.w}</div><div><div class="shi-s" style="color:${c}">${tot} pts</div><div class="shi-bar"><div class="shi-bf" style="width:${tot}%;background:${c}"></div></div></div>`;
+  hist.insertBefore(item,hist.firstChild);if(hist.children.length>6)hist.removeChild(hist.lastChild);
+}
+initQ();initSpk();
+</script>
+</body>
+</html>
